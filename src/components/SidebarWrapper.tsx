@@ -1,6 +1,13 @@
-"use client";
-import Sidebar from "@/components/Sidebar";
+'use client';
+
+import { useState } from 'react';
+import Sidebar from '@/components/Sidebar'; // correct if Sidebar is in /components
+
 
 export default function SidebarWrapper() {
-  return <Sidebar />;
+  const [collapsed, setCollapsed] = useState(false);
+
+  return (
+    <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+  );
 }

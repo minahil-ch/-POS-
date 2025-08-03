@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import RecentActivity from "@/components/RecentActivity";
 import QuickAccess from '@/components/QuickAccess';
+
+
 import {
   ShoppingCart,
   Package,
@@ -36,6 +38,8 @@ import {
 
 const navItems = [{ name: '', path: '/settings', icon: Settings }];
 
+
+
 const lowStockItems = [
   { name: 'Mouse', quantity: 2 },
   { name: 'Keyboard', quantity: 1 },
@@ -56,6 +60,7 @@ const topProducts = [
 
 function ThemeToggle() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
   useEffect(() => {
     const saved = localStorage.getItem('theme') as 'light' | 'dark' | null;
     if (saved) {
@@ -63,12 +68,39 @@ function ThemeToggle() {
       document.documentElement.classList.toggle('dark', saved === 'dark');
     }
   }, []);
+
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     document.documentElement.classList.toggle('dark', newTheme === 'dark');
     localStorage.setItem('theme', newTheme);
+
+    // ✨ Add a temporary animated overlay
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.zIndex = '9999';
+    overlay.style.pointerEvents = 'none';
+    overlay.style.background = newTheme === 'dark'
+      ? 'linear-gradient(135deg, #000000 0%, #111111 100%)'
+      : 'linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%)';
+    overlay.style.transition = 'opacity 0.8s ease-in-out';
+    overlay.style.opacity = '1';
+
+    document.body.appendChild(overlay);
+
+    requestAnimationFrame(() => {
+      overlay.style.opacity = '0';
+    });
+
+    setTimeout(() => {
+      document.body.removeChild(overlay);
+    }, 1000);
   };
+
   return (
     <button
       onClick={toggleTheme}
@@ -79,6 +111,7 @@ function ThemeToggle() {
     </button>
   );
 }
+
 
 function RealTimeClock() {
   const [time, setTime] = useState<string | null>(null);
@@ -96,14 +129,15 @@ function RealTimeClock() {
     hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
   if (!time) return null;
   return (
-    <div className="text-[10px] text-white hidden sm:block text-right leading-tight">
+     <div className="text-[10px] text-gray-700 dark:text-white hidden sm:block text-right leading-tight">
+
       <div>{greeting}, Admin</div>
       <div>{time}</div>
     </div>
   );
   
 }
-
+ 
 
 
 function exportDashboardCSV() {
@@ -190,21 +224,26 @@ export default function DashboardPage() {
   const totalAlerts = lowStockItems.length + outOfStockItems.length;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white transition-colors duration-300 overflow-hidden rounded-2xl">
-      {/* ✅ Navbar */}
-<nav className="bg-gradient-to-r from-primary to-purple-600 dark:bg-gray-900 dark:from-gray-900 dark:to-gray-900 border-b shadow px-4 py-2 flex items-center justify-between rounded-2xl">
+    
+   <div className="min-h-screen bg-gray-200 dark:bg-gray-900 text-black dark:text-white transition-colors duration-300 overflow-hidden rounded-2xl">
 
-        <div>
-  <div className="text-lg font-bold text-white">POS Dashboard</div>
-  <div className="text-[10px] text-white opacity-80">Welcome to Largify</div>
+      {/* ✅ Navbar */}
+<nav className="bg-gradient-to-r from-gray-600 via-gray-400 to-gray-200 dark:bg-gray-900 dark:from-gray-900 dark:to-gray-900 border-b shadow px-4 py-2 flex items-center justify-between rounded-2xl text-black dark:text-white">
+ 
+
+<div>
+  <div className="text-lg font-bold text-gray-200 dark:text-white">POS Dashboard</div>
+  <div className="text-[10px] text-gray-200 dark:text-white opacity-80">Welcome to Largify</div>
 </div>
+
 
        <div className="flex-1 flex justify-center px-4">
   <div className="relative w-full max-w-sm">
     {/* Search Icon */}
     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
       <svg
-        className="w-4 h-4 text-gray-400"
+        className="w-4 h-4 text-gray-800 dark:text-white"
+
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
@@ -219,11 +258,12 @@ export default function DashboardPage() {
     </div>
 
     {/* Search Input */}
-    <input
-      type="text"
-      placeholder="Search..."
-      className="w-full pl-10 pr-4 py-2 bg-white/10 border border-black rounded-md shadow-sm text-sm text-white placeholder-gray-300 focus:outline-none dark:bg-gray-800 dark:border-black"
-    />
+   <input
+  type="text"
+  placeholder="Search..."
+  className="w-full pl-10 pr-4 py-2 bg-white/10 border border-gray-900 dark:border-black rounded-md shadow-sm text-sm text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none dark:bg-gray-800"
+/>
+
   </div>
 </div>
 
@@ -232,24 +272,26 @@ export default function DashboardPage() {
           {navItems.map(({ name, path, icon: Icon }) => {
             const isActive = pathname === path;
             return (
-              <Link
-                key={name}
-                href={path}
-                className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition ${
-                  isActive
-                    ? 'bg-white text-teal-700'
-                    : 'text-white hover:bg-white hover:text-teal-700'
-                }`}
-              >
-                <Icon size={14} />
-                {name}
-              </Link>
+             <Link
+  key={name}
+  href={path}
+  className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition ${
+    isActive
+      ? 'bg-white text-teal-700'
+      : 'text-gray-800 dark:text-white hover:bg-white hover:text-teal-700'
+  }`}
+>
+  <Icon size={14} className="text-gray-800 dark:text-white" />
+  {name}
+</Link>
+
               
             );
           })}
           <Download
     onClick={exportDashboardCSV}
-    className="h-5 w-5 text-white cursor-pointer hover:text-purple-400 transition"
+ className="h-5 w-5 text-gray-700 dark:text-white cursor-pointer hover:text-purple-400 transition"
+
   />
           <div className="relative" ref={notificationRef}>
             
@@ -261,7 +303,8 @@ export default function DashboardPage() {
             >
               
               
-              <Bell size={18} />
+         <Bell className="text-gray-700 dark:text-white" size={18} />
+
               
               
               {totalAlerts > 0 && (
@@ -316,20 +359,24 @@ export default function DashboardPage() {
             <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-teal-400 to-blue-500 flex items-center justify-center shadow">
               <User className="text-white" size={20} />
             </div>
-            <span className="hidden sm:block text-xs font-semibold text-white">
-              Admin
-            </span>
+          <span className="hidden sm:block text-xs font-semibold text-gray-800 dark:text-white">
+  Admin
+</span>
+
           </div>
         </div>
       </nav> 
       {/* ✅ Welcome Banner Below Navbar */}
       
-<div className="mt-6 bg-gradient-to-r from-primary to-purple-600 dark:bg-gray-800 dark:from-gray-800 dark:to-gray-800 text-white py-4 px-6 shadow-md rounded-2xl">
+<div className="mt-4 bg-gradient-to-r from-gray-400 via-gray-400 to-gray-200 dark:bg-gray-900 dark:from-gray-800 dark:to-gray-800 text-black dark:text-white py-4 px-6 shadow-md rounded-2xl">
 
-  <h1 className="text-xl sm:text-2xl font-bold mb-1 text-center">
+
+ <h1 className="text-xl sm:text-2xl font-bold mb-1 text-center text-gray-700 dark:text-white">
+
     Welcome to Largify POS
   </h1>
-  <div className="text-xs sm:text-sm text-center">
+ <div className="text-xs sm:text-sm text-center text-gray-700 dark:text-white">
+
     Monitor your business performance with real-time insights and analytics.
   </div>
   <div className="mt-2 text-[11px] sm:text-xs font-mono pl-4">
@@ -345,27 +392,34 @@ export default function DashboardPage() {
       <main className="p-4 space-y-4">
         {/* Metrics Cards */}
         <div className="grid grid-cols-6 gap-2 mt-2">
-          <div className="bg-white dark:bg-gray-800 p-2 rounded shadow text-xs">
+          <div className="bg-gray-300 dark:bg-gray-800 p-2 rounded shadow text-xs">
+
             <p className="text-gray-500 dark:text-gray-300">Total Sales</p>
             <p className="text-lg font-bold text-blue-600">$250k</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-2 rounded shadow text-xs">
+       <div className="bg-gray-300 dark:bg-gray-800 p-2 rounded shadow text-xs">
+
+
             <p className="text-gray-500 dark:text-gray-300">Today's Revenue</p>
             <p className="text-lg font-bold text-green-600">$1.5k</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-2 rounded shadow text-xs">
+         <div className="bg-gray-300 dark:bg-gray-800 p-2 rounded shadow text-xs">
+
             <p className="text-gray-500 dark:text-gray-300">Active Users</p>
             <p className="text-lg font-bold text-purple-600">12</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-2 rounded shadow text-xs">
+       <div className="bg-gray-300 dark:bg-gray-800 p-2 rounded shadow text-xs">
+
             <p className="text-gray-500 dark:text-gray-300">Low Stock Items</p>
             <p className="text-lg font-bold text-yellow-600">{lowStockItems.length}</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-2 rounded shadow text-xs">
+       <div className="bg-gray-300 dark:bg-gray-800 p-2 rounded shadow text-xs">
+
             <p className="text-gray-500 dark:text-gray-300">Out of Stock</p>
             <p className="text-lg font-bold text-red-600">{outOfStockItems.length}</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-2 rounded shadow text-xs">
+ <div className="bg-gray-300 dark:bg-gray-800 p-2 rounded shadow text-xs">
+
             <p className="text-gray-500 dark:text-gray-300">Total Inventory Items</p>
             <p className="text-lg font-bold text-indigo-600">128</p>
           </div>
@@ -395,7 +449,8 @@ export default function DashboardPage() {
 
         {/* Charts */}
         <div className="grid grid-cols-2 gap-2">
-          <div className="bg-white dark:bg-gray-800 p-2 rounded shadow h-64">
+         <div className="bg-gray-300 dark:bg-gray-800 p-2 rounded shadow h-64 text-xs">
+
             <h3 className="text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">
               Sales Trend
             </h3>
@@ -414,7 +469,8 @@ export default function DashboardPage() {
               </LineChart>
             </ResponsiveContainer>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-2 rounded shadow h-64">
+         <div className="bg-gray-300 dark:bg-gray-800 p-2 rounded shadow h-64 text-xs">
+
             <h3 className="text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">
               Sales vs Orders
             </h3>
@@ -433,7 +489,8 @@ export default function DashboardPage() {
         </div>
 
         {/* Top Products Below */}
-        <div className="bg-white dark:bg-gray-800 p-3 rounded shadow text-xs">
+       <div className="bg-gray-300 dark:bg-gray-800 p-3 rounded shadow text-xs">
+
           <h3 className="font-medium text-gray-600 dark:text-gray-300 mb-2">
             Top Product Report
           </h3>
@@ -449,7 +506,8 @@ export default function DashboardPage() {
 
         {/* Low Stock Alert */}
         {lowStockItems.length > 0 && (
-          <div className="bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 text-yellow-800 dark:text-yellow-100 text-xs rounded p-3 shadow flex items-center justify-between">
+          <div className="bg-orange-50 dark:bg-orange-900 border border-orange-200 dark:border-orange-700 text-orange-800 dark:text-orange-100 text-xs rounded p-3 shadow flex items-center justify-between">
+
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-yellow-500" />
               <span className="font-semibold">Low Stock Alert:</span>
