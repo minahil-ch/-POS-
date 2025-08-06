@@ -166,7 +166,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-black dark:text-white transition-colors duration-300">
    <div className="relative"></div>
-   <div className="absolute top-0 right-0 w-[200px] h-[60px] bg-[#DCD0FF] rounded-tr-2xl z-0"></div>
+  <div className="absolute top-0 right-0 w-[200px] h-[60px] rounded-bl-2xl z-0 bg-[#DCD0FF] dark:bg-gray-700" />
       {/* ✅ Navbar */}
       <nav className=" relative z-10 bg-white dark:bg-black border-b shadow px-4 py-2 flex items-center justify-between text-black dark:text-white rounded-tr-2xl">
         {/* Sidebar Toggle */}
