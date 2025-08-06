@@ -27,7 +27,7 @@ const activities = [
 
 export default function RecentActivity() {
   return (
-   <div className="bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-white rounded-2xl shadow-md p-4 w-full h-full">
+   <div className="bg-white dark:bg-black text-gray-800 dark:text-white rounded-2xl shadow-md p-4 w-full h-full">
 
 
 

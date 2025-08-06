@@ -91,29 +91,25 @@ export default function Sidebar({
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
   return (
-    <div
+   <div
   className={clsx(
-    'sticky top-4 left-0 z-40 rounded-2xl shadow-lg transition-all duration-300',
-    'bg-gradient-to-b from-gray-600 via-gray-400 to-gray-200 dark:from-gray-900 dark:to-gray-800',
-    'mb-4',              // Lift from bottom
-    collapsed ? 'w-12 h-[90vh]' : 'w-36 h-[90vh]'  // Shorter and narrower
+    'sticky top-8 left-7 z-40 shadow-lg transition-all duration-300',
+    'bg-white dark:bg-black text-gray-800 dark:text-white',
+    'rounded-tl-2xl rounded-bl-2xl', // ✅ Rounded only on top-left and bottom-left
+    'mt-6 ml-2 mb-4',
+    collapsed ? 'w-13 h-[96vh]' : 'w-46 h-[96vh]'
   )}
 >
 
+
       {/* Header */}
-      <div className="flex items-center justify-between px-3 py-3 border-b border-white/20">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-700">
         {!collapsed && (
-          <span className="font-bold text-sm text-gray-300 dark:text-gray-400">
+          <span className="font-bold text-lg text-black dark:text-white">
             Largify POS
           </span>
         )}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="text-gray-400 dark:text-gray-400"
-
-        >
-          {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-        </button>
+       
       </div>
 
       {/* Menu Items */}
@@ -122,7 +118,7 @@ export default function Sidebar({
           <div key={idx} className="relative group">
             <Link
               href={item.href || '#'}
-              className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors text-gray-800 dark:text-gray-200"
+              className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#F3E5F5] dark:hover:bg-gray-700 transition-colors text-gray-800 dark:text-gray-200"
             >
               <span>{item.icon}</span>
               {!collapsed && <span>{item.label}</span>}

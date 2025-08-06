@@ -1,13 +1,22 @@
 'use client';
+import { useEffect } from 'react';
+import Sidebar from '@/components/Sidebar';
 
-import { useState } from 'react';
-import Sidebar from '@/components/Sidebar'; // correct if Sidebar is in /components
+export default function SidebarWrapper({
+  collapsed,
+  setCollapsed,
+}: {
+  collapsed: boolean;
+  setCollapsed: (val: boolean) => void;
+}) {
+  useEffect(() => {
+    const handler = () => {
+      const val = localStorage.getItem('sidebar-collapsed') === 'true';
+      setCollapsed(val);
+    };
+    window.addEventListener('toggle-sidebar', handler);
+    return () => window.removeEventListener('toggle-sidebar', handler);
+  }, []);
 
-
-export default function SidebarWrapper() {
-  const [collapsed, setCollapsed] = useState(false);
-
-  return (
-    <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-  );
+  return <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />;
 }
